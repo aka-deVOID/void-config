@@ -1,0 +1,8 @@
+add_newline = false
+format = '$directory [ ](cyan) >  '
+
+
+[directory]
+style = 'white'
+format = '[$path]($style)[$read_only]($read_only_style) '
+read_only = ''
