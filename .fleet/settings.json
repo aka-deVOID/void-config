@@ -1,0 +1,9 @@
+{
+    "terminal.profiles": [
+        {
+            "program": "/bin/fish",
+        }
+    ],
+    "theme": "dark-edited",
+    "editor.formatOnSave": true,
+}
