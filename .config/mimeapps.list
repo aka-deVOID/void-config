@@ -1,0 +1,4 @@
+
+[Default Applications]
+inode/directory=ranger.desktop
+x-scheme-handler/postman=Postman.desktop
