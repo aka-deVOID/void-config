@@ -4,13 +4,17 @@ from libqtile.lazy import lazy
 from pathlib import Path
 from subprocess import run, call as sh_run
 
-from utils import random_wallpaper
-
 # PATHS
 HOME = str(Path.home())  # home dir
 WALL_PATH = HOME + "/wallpapers"  # wallpaper path
+VERTICAL_WALLPAPER = WALL_PATH + "/vertical"
 MODE = "mod4"  # win key
 TERMINAL = "alacritty"
+
+# Screen Style
+SECOND_SCREEM_IS_VERTICAL = True
+
+from utils import random_wallpaper, random_wallpaper_for_second_screen, set_to_vertical, set_to_horizonal
 
 keys = [
     Key([MODE], "left", lazy.layout.left(), desc="Move focus to left"),
@@ -66,6 +70,14 @@ keys = [
         foreground="#777777",
         selected_foreground="#999999",
     ))),
+
+    # Second Screen
+    Key([MODE, "control"], "v", lazy.spawn("xrandr --output HDMI-A-0 --mode 1920x1080 --rotate left --scale 1x1"),
+        desc="rotate right screen to (to vertical)"),
+    Key([MODE, "control"], "h", lazy.spawn("xrandr --output HDMI-A-0 --mode 1920x1080 --scale 1x1"),
+        desc="rotate screen to normal (horizonal)"),
+
+    # Key([MODE], "c", )
 ]
 
 # WORKSPACES
@@ -162,6 +174,26 @@ screens = [
         wallpaper=random_wallpaper(),
         wallpaper_mode="fill",
     ),
+    Screen(
+        top=bar.Bar(
+            [
+                widget.Spacer(length=20),
+                widget.CurrentLayout(background="#111111", ),
+                widget.Spacer(),
+                widget.Clock(format=" %d/%m/%y %H:%M "),  # "%Y-%m-%d %a %I:%M %p"
+                widget.Spacer(),
+                widget.Spacer(length=20),
+            ],
+            size=20,
+            background="#111111",
+            # border_color=["#111111", "#555555", "#777777", "#999999"],  # Border Color
+            border_width=[0, 0, 0, 0],
+            margin=[2, 2, 0, 2],
+            opacity=0.75,
+        ),
+        wallpaper=random_wallpaper_for_second_screen() if SECOND_SCREEM_IS_VERTICAL else random_wallpaper(),
+        wallpaper_mode="fill",
+    ),
 ]
 
 mouse = [
@@ -191,3 +223,16 @@ def _():
 @hook.subscribe.startup_once
 def _():
     run(['xscreensaver', '-nosplash'])
+
+
+@hook.subscribe.startup
+def _():
+    if len(qtile.screen) > 1:
+        # first screen
+        qtile.groups_map["1"].cmd_toscreen(0, toggle=True)
+        qtile.groups_map["2"].cmd_toscreen(0, toggle=True)
+        qtile.groups_map["3"].cmd_toscreen(0, toggle=True)
+        # second screen
+        qtile.groups_map["4"].cmd_toscreen(1, toggle=True)
+        qtile.groups_map["5"].cmd_toscreen(1, toggle=True)
+        qtile.groups_map["6"].cmd_toscreen(1, toggle=True)
