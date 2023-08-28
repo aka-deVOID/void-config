@@ -12,7 +12,7 @@ MODE = "mod4"  # win key
 TERMINAL = "alacritty"
 
 # Screen Style
-SECOND_SCREEM_IS_VERTICAL = True
+SECOND_SCREEM_IS_VERTICAL = False
 
 from utils import random_wallpaper, random_wallpaper_for_second_screen, set_to_vertical, set_to_horizonal
 
@@ -76,14 +76,13 @@ keys = [
         desc="rotate right screen to (to vertical)"),
     Key([MODE, "control"], "h", lazy.spawn("xrandr --output HDMI-A-0 --mode 1920x1080 --scale 1x1"),
         desc="rotate screen to normal (horizonal)"),
-
     # Key([MODE], "c", )
 ]
 
 # WORKSPACES
 groups = [
-    Group("1", label="editor", spawn="fleet", layout="max"),
-    Group("2", label="firefox", spawn="firefox --new-instance", layout="max"),
+    Group("1", label="editor", layout="max"),
+    Group("2", label="firefox", spawn="firefox", layout="max"),
     Group("3", label="any"),
     Group("4", label="social", spawn="discord"),
     Group("5", label="terminal"),
@@ -218,15 +217,6 @@ widget_defaults = {"font": "sans", "fontsize": 12}
 def _():
     qtile.cmd_hide_show_bar('all')  # hide bar at startup
     sh_run(HOME + "/.config/qtile/autostart.sh")  # start shell script to run apps at startup
-
-
-@hook.subscribe.startup_once
-def _():
-    run(['xscreensaver', '-nosplash'])
-
-
-@hook.subscribe.startup
-def _():
     if len(qtile.screen) > 1:
         # first screen
         qtile.groups_map["1"].cmd_toscreen(0, toggle=True)
@@ -236,3 +226,8 @@ def _():
         qtile.groups_map["4"].cmd_toscreen(1, toggle=True)
         qtile.groups_map["5"].cmd_toscreen(1, toggle=True)
         qtile.groups_map["6"].cmd_toscreen(1, toggle=True)
+
+
+@hook.subscribe.startup_once
+def _():
+    run(['xscreensaver', '-nosplash'])

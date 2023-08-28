@@ -6,4 +6,5 @@
     ],
     "theme": "dark-edited",
     "editor.formatOnSave": true,
+    "zoomLevel": 0.9
 }
